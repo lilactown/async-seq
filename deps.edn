@@ -1,1 +1,6 @@
-{:paths ["src"]}
+{:paths ["src"]
+ :aliases
+ {:dev
+  {:extra-deps {org.clojure/clojurescript {:mvn/version "LATEST"}
+                mhuebert/kitchen-async {:mvn/version "0.1.0"}}
+   :extra-paths ["user"]}}}
