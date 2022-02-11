@@ -1,5 +1,5 @@
 (ns town.lilac.async.seq
-  (:refer-clojure :exclude [cons first next])
+  (:refer-clojure :exclude [cons first next transduce])
   (:require-macros [town.lilac.async.seq :refer [lazy-aseq]]))
 
 
@@ -55,8 +55,8 @@
 (defn next [aseq] (await-next aseq))
 
 
-(defn transmute
-  ([xform f src] (transmute xform f (f) src))
+(defn transduce
+  ([xform f src] (transduce xform f (f) src))
   ([xform f init src]
    (let [rf (xform f)
          step
@@ -75,8 +75,8 @@
 
 
 (defn collect
-  ([to from] (transmute identity conj to from))
-  ([to xform from] (transmute xform conj to from)))
+  ([to from] (transduce identity conj to from))
+  ([to xform from] (transduce xform conj to from)))
 
 
 (defn iteration

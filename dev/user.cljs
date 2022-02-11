@@ -4,6 +4,11 @@
    [town.lilac.async.seq :as aseq]))
 
 
+;;
+;; Example of an async API for fetching pages of data, where the token in the
+;; payload tells the consumer how to fetch the next page
+;;
+
 (def ^:private pages-data
   "Some example page data, keyed by the `:page`.
   The next page is contained in the payload at the `:next` key."
@@ -57,16 +62,16 @@
 #_(.then (recursive-example 4) prn)
 
 
-(defn transmute-example
+(defn transduce-example
   []
-  (aseq/transmute
+  (aseq/transduce
    (comp (take 3) (map :page))
    conj []
    (aseq/iteration fetch-page
                    :initk 0
                    :kf :next)))
 
-#_(.then (transmute-example) prn)
+#_(.then (transduce-example) prn)
 
 
 (defn collect-example
