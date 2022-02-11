@@ -1,5 +1,6 @@
 (ns user
   (:require
+   [kitchen-async.promise :as p]
    [town.lilac.async.seq :as aseq]))
 
 
@@ -40,7 +41,7 @@
                                :kf :next)]
      (.then
       (aseq/first pages)
-      #(recursive-example (dec n) [%] (seq/next pages)))))
+      #(recursive-example (dec n) [%] (aseq/next pages)))))
   ([n results p]
    (if (pos? n)
      (.then p (fn [aseq]
@@ -75,3 +76,21 @@
                                                                :kf :next)))
 
 #_(.then (collect-example) prn)
+
+
+(defn loop-example
+  []
+  (p/loop [pages (aseq/iteration fetch-page
+                                 :initk 0
+                                 :kf :next)
+           results []
+           page-num 6]
+    (p/let [page (aseq/first pages)]
+      (if (and (pos? page-num) (some? page))
+        (p/recur
+         (aseq/next pages)
+         (conj results page)
+         (dec page-num))
+        results))))
+
+#_(.then (loop-example) prn)
